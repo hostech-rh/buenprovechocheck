@@ -152,7 +152,10 @@
   </section>
 </div>
 
-<script src="config.js"></script>
+<script>
+  // URL de la aplicación web de Google Apps Script (termina en /exec)
+  window.NPS_CONFIG = { SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxHPnSx1lvX0T2pIInB5ZeJgtfFBXU0JnJfQL9k6vIoh8OKeBtH9HyHKF17l0FfOtZQ/exec" };
+</script>
 <script>
 (function () {
   var ATRIBUTOS = [
@@ -238,7 +241,7 @@
       return;
     }
     var url = window.NPS_CONFIG && window.NPS_CONFIG.SCRIPT_URL;
-    if (!url) { err.textContent = "La encuesta aún no está conectada a Google Sheets (falta SCRIPT_URL en config.js)."; return; }
+    if (!url) { err.textContent = "La encuesta aún no está conectada a Google Sheets (falta SCRIPT_URL)."; return; }
 
     var datos = { comentario: com.value.trim().slice(0, 500) };
     requeridas.forEach(function (q) { datos[q] = valor(q); });
