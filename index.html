@@ -141,10 +141,8 @@
 
   var hoy = new Date();
   var b = Math.floor(hoy.getMonth() / 2);
-  var periodoId = hoy.getFullYear() + "-B" + (b + 1);
   var periodo = MESES[b * 2] + "–" + MESES[b * 2 + 1] + " " + hoy.getFullYear();
 
-  function storage(fn) { try { return fn(window.localStorage); } catch (e) { return null; } }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
 
   // Cada paso: bienvenida, 10 preguntas y gracias
@@ -188,7 +186,7 @@
         '<div class="chars"><span id="chars">0</span>/500</div>' +
         '<button class="cta" data-accion="enviar" type="button">Enviar respuestas</button><div class="err" id="err" role="alert"></div>';
     }
-    return '<div class="done"><img src="logo.svg" alt=""><h1>¡Gracias!</h1><p id="doneMsg">Tus respuestas se enviaron. Te volveremos a preguntar el próximo bimestre.</p></div>';
+    return '<div class="done"><img src="logo.svg" alt=""><h1>¡Gracias!</h1><p>Tus respuestas se enviaron. Te volveremos a preguntar el próximo bimestre.</p><button class="cta" data-accion="otra" type="button" style="background:transparent;color:var(--blue);box-shadow:0 0 0 1px var(--line) inset">Enviar otra respuesta</button></div>';
   }
 
   stage.innerHTML = pasos.map(function (p, i) { return '<section class="step" data-i="' + i + '">' + html(p, i) + "</section>"; }).join("");
@@ -227,7 +225,9 @@
   stage.addEventListener("click", function (e) {
     var accion = e.target.closest("[data-accion]");
     if (accion) {
-      if (accion.getAttribute("data-accion") === "empezar") ir(1);
+      var a = accion.getAttribute("data-accion");
+      if (a === "empezar") ir(1);
+      else if (a === "otra") location.reload();
       else enviar(accion);
       return;
     }
@@ -274,7 +274,6 @@
     // text/plain evita la verificación CORS previa; Apps Script lee el cuerpo igual
     fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(datos) })
       .then(function () {
-        storage(function (s) { s.setItem("nps-comida-" + periodoId, "1"); });
         document.getElementById("fill").style.width = "100%";
         ir(pasos.length - 1);
       })
@@ -284,12 +283,7 @@
       });
   }
 
-  if (storage(function (s) { return s.getItem("nps-comida-" + periodoId); })) {
-    ir(pasos.length - 1);
-    document.getElementById("doneMsg").textContent = "Ya contestaste la encuesta de este bimestre desde este dispositivo. ¡Gracias!";
-  } else {
-    ir(0);
-  }
+  ir(0);
 })();
 </script>
 </body>
