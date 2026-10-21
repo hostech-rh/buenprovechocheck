@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pulso de comida · Hostech</title>
+<title>Buen Provecho Check · Hostech</title>
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,230 +37,259 @@
     --line: #2d2d3a; --chip: #24242f; --blue: #6f86ff; --magenta: #e04aae;
   }
   * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
     font-size: 16px; line-height: 1.5;
   }
-  .wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px 64px; }
-  header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
-  header img { width: 38px; height: auto; }
-  .brand { font-weight: 600; font-size: 14px; color: var(--ink-2); letter-spacing: .02em; }
-  h1 { font-size: 26px; line-height: 1.2; margin: 0 0 6px; font-weight: 700; }
-  .lead { color: var(--ink-2); margin: 0 0 8px; }
-  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 24px; }
-  .pill { font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--ink-2); }
-  .bar { position: sticky; top: 0; z-index: 2; background: var(--bg); padding: 10px 0; margin-bottom: 8px; }
+  .app { max-width: 560px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; padding: 16px 16px 24px; }
+  .top { display: flex; align-items: center; gap: 12px; height: 44px; }
+  .top img { width: 28px; height: auto; }
+  .brand { font-weight: 600; font-size: 14px; color: var(--ink-2); letter-spacing: .02em; flex: 1; }
+  .back { border: 0; background: var(--card); color: var(--ink-2); font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 99px; cursor: pointer; border: 1px solid var(--line); }
+  .back:disabled { visibility: hidden; }
+  .prog { margin: 10px 0 0; }
   .track { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
-  .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--yellow), var(--magenta), var(--blue)); transition: width .3s; }
-  .count { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  fieldset { border: 0; margin: 0 0 14px; padding: 20px 18px; background: var(--card); border-radius: 16px; border: 1px solid var(--line); min-width: 0; }
-  legend { padding: 0; float: left; width: 100%; font-weight: 600; font-size: 16px; margin-bottom: 14px; }
-  legend .n { display: inline-block; min-width: 26px; color: var(--cyan); }
-  legend + * { clear: both; }
-  .hint { display: block; font-weight: 400; font-size: 13px; color: var(--muted); margin-top: 2px; }
-  .nps { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 4px; }
-  .opt { position: relative; }
-  .opt input { position: absolute; opacity: 0; inset: 0; margin: 0; }
-  .opt span {
-    display: flex; align-items: center; justify-content: center; height: 42px; border-radius: 10px;
-    background: var(--chip); font-weight: 600; font-size: 15px; cursor: pointer; user-select: none;
-    border: 2px solid transparent; transition: background .15s, color .15s;
-  }
-  .opt input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .nps .opt input:checked + span { color: #fff; }
-  .nps .det input:checked + span { background: var(--magenta); }
-  .nps .pas input:checked + span { background: #8f8e86; }
-  .nps .pro input:checked + span { background: var(--blue); }
-  .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
-  .days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
-  .days .opt input:checked + span { background: var(--cyan); color: #fff; }
-  .stars { display: flex; gap: 6px; flex-direction: row-reverse; justify-content: flex-end; }
-  .stars .opt span { width: 48px; height: 48px; font-size: 0; background: transparent; }
-  .stars .opt span::before { content: ""; width: 34px; height: 34px; background: var(--line);
+  .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--yellow), var(--magenta), var(--blue)); transition: width .35s ease; }
+  .count { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .stage { flex: 1; display: flex; align-items: center; position: relative; padding: 24px 0; }
+  .step { width: 100%; display: none; }
+  .step.on { display: block; animation: entra .35s ease both; }
+  .step.on.atras { animation-name: entraAtras; }
+  @keyframes entra { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+  @keyframes entraAtras { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .step.on { animation: none; } .fill { transition: none; } }
+  .num { font-size: 13px; font-weight: 600; color: var(--cyan); letter-spacing: .04em; margin-bottom: 8px; }
+  h1, h2 { margin: 0 0 8px; line-height: 1.25; }
+  h1 { font-size: 30px; font-weight: 700; }
+  h2 { font-size: 23px; font-weight: 600; }
+  .hint { font-size: 14px; color: var(--muted); margin: 0 0 4px; }
+  .lead { color: var(--ink-2); margin: 0 0 20px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+  .pill { font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--ink-2); }
+  .opts { margin-top: 24px; }
+  .opt { border: 2px solid transparent; background: var(--card); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; border-radius: 12px; transition: background .15s, color .15s, transform .1s; box-shadow: 0 0 0 1px var(--line) inset; }
+  .opt:active { transform: scale(.96); }
+  .opt:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .nps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+  .nps .opt { height: 54px; font-size: 18px; }
+  .nps .det.sel { background: var(--magenta); color: #fff; box-shadow: none; }
+  .nps .pas.sel { background: #8f8e86; color: #fff; box-shadow: none; }
+  .nps .pro.sel { background: var(--blue); color: #fff; box-shadow: none; }
+  .ends { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .days .opt { height: 64px; font-size: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+  .days .opt small { font-size: 11px; font-weight: 500; color: var(--muted); }
+  .days .opt.sel { background: var(--cyan); color: #fff; box-shadow: none; }
+  .days .opt.sel small { color: #fff; }
+  .stars { display: flex; gap: 6px; }
+  .stars .opt { width: 58px; height: 58px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; box-shadow: none; }
+  .stars .opt::before { content: ""; width: 46px; height: 46px; background: var(--line);
     clip-path: polygon(50% 3%, 61.8% 36%, 97% 36%, 68.5% 57%, 79.4% 92%, 50% 71%, 20.6% 92%, 31.5% 57%, 3% 36%, 38.2% 36%); transition: background .12s; }
-  .stars .opt input:checked + span::before,
-  .stars .opt:has(input:checked) ~ .opt span::before { background: var(--yellow); }
-  @media (hover: hover) {
-    .stars .opt:hover span::before, .stars .opt:hover ~ .opt span::before { background: var(--yellow); opacity: .75; }
-  }
-  .starlbl { font-size: 13px; color: var(--muted); margin-top: 4px; min-height: 20px; }
-  textarea { width: 100%; min-height: 110px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink);
-    font: inherit; padding: 12px; resize: vertical; }
+  .stars .opt.lit::before { background: var(--yellow); }
+  .starlbl { font-size: 15px; font-weight: 500; color: var(--ink-2); margin-top: 8px; min-height: 24px; }
+  textarea { width: 100%; min-height: 140px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    font: inherit; padding: 14px; resize: vertical; margin-top: 16px; }
   textarea:focus { outline: 3px solid var(--focus); outline-offset: 1px; }
   .chars { font-size: 12px; color: var(--muted); text-align: right; margin-top: 4px; }
-  button.send { width: 100%; height: 54px; border: 0; border-radius: 14px; background: var(--blue); color: #fff; font: inherit; font-weight: 600; font-size: 17px; cursor: pointer; margin-top: 8px; }
-  button.send:disabled { opacity: .5; cursor: not-allowed; }
+  .cta { width: 100%; height: 56px; border: 0; border-radius: 14px; background: var(--blue); color: #fff; font: inherit; font-weight: 600; font-size: 17px; cursor: pointer; margin-top: 16px; }
+  .cta:disabled { opacity: .5; cursor: not-allowed; }
   .err { color: var(--magenta); font-size: 14px; margin-top: 10px; min-height: 20px; }
-  fieldset.missing { border-color: var(--magenta); }
-  .done { text-align: center; padding: 48px 12px; }
-  .done img { width: 64px; margin-bottom: 16px; }
-  .done h2 { font-size: 24px; margin: 0 0 8px; }
+  .done { text-align: center; }
+  .done img { width: 64px; margin-bottom: 18px; }
   .done p { color: var(--ink-2); margin: 0; }
   [hidden] { display: none !important; }
-  @media (max-width: 420px) {
-    .opt span { height: 38px; font-size: 14px; border-radius: 8px; }
-    .nps { gap: 3px; }
-    .stars .opt span { width: 44px; height: 44px; }
-    h1 { font-size: 23px; }
+  @media (max-width: 380px) {
+    h1 { font-size: 26px; } h2 { font-size: 20px; }
+    .stars .opt { width: 52px; height: 52px; } .stars .opt::before { width: 40px; height: 40px; }
+    .nps .opt { height: 50px; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
+<div class="app">
+  <div class="top">
     <img src="logo.svg" alt="Hostech">
-    <span class="brand">HOSTECH · Pulso de comida</span>
-  </header>
-
-  <main id="survey">
-    <h1>¿Qué tal estuvo la comida este bimestre?</h1>
-    <p class="lead">Tu opinión ayuda a que el proveedor mejore. La encuesta es anónima.</p>
-    <div class="meta"><span class="pill">10 preguntas</span><span class="pill">2 minutos</span><span class="pill" id="periodo"></span></div>
-
-    <div class="bar" aria-hidden="true"><div class="track"><div class="fill" id="fill"></div></div><div class="count" id="count">0 de 9 respondidas</div></div>
-
-    <form id="form" novalidate>
-      <fieldset data-q="nps">
-        <legend><span class="n">1.</span>Del 0 al 10, ¿qué tan probable es que le recomiendes el servicio de comida a un compañero?</legend>
-        <div class="nps" id="npsOpts"></div>
-        <div class="ends"><span>Nada probable</span><span>Muy probable</span></div>
-      </fieldset>
-
-      <fieldset data-q="dias">
-        <legend><span class="n">2.</span>¿Cuántos días a la semana comes del servicio?</legend>
-        <div class="days" id="diasOpts"></div>
-      </fieldset>
-
-      <div id="stars"></div>
-
-      <fieldset>
-        <legend><span class="n">10.</span>¿Qué es lo que más debería mejorar el proveedor?<span class="hint">Opcional. No escribas nombres.</span></legend>
-        <textarea id="comentario" maxlength="500" placeholder="Por ejemplo: más opciones de guisado, porciones de arroz más grandes…"></textarea>
-        <div class="chars"><span id="chars">0</span>/500</div>
-      </fieldset>
-
-      <button class="send" id="send" type="submit">Enviar respuestas</button>
-      <div class="err" id="err" role="alert"></div>
-    </form>
-  </main>
-
-  <section class="done" id="done" hidden>
-    <img src="logo.svg" alt="">
-    <h2>¡Gracias!</h2>
-    <p id="doneMsg">Tus respuestas se enviaron. Te volveremos a preguntar el próximo bimestre.</p>
-  </section>
+    <span class="brand">HOSTECH · Buen Provecho Check</span>
+    <button class="back" id="back" type="button" disabled>← Atrás</button>
+  </div>
+  <div class="prog" id="prog" hidden>
+    <div class="track"><div class="fill" id="fill"></div></div>
+  </div>
+  <main class="stage" id="stage"></main>
 </div>
 
 <script>
   // URL de la aplicación web de Google Apps Script (termina en /exec)
-  window.NPS_CONFIG = { SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxxCNym4u1ftAqdVr4RsSlI_ZVFCdXS_MKkT5YHbnbodbTxjDs9GAEJQTS8Uk-8tIt3/exec" };
+  window.NPS_CONFIG = { SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzC2gFDm0yvSGY1DVnp_qQeYBC9k2Te_Sa9YacXXGuCo5TIFylR84DVjvblcJd0Iis/exec" };
 </script>
 <script>
 (function () {
   var ATRIBUTOS = [
-    ["sabor", "Sabor de la comida"],
-    ["variedad", "Variedad del menú"],
-    ["porcion", "Tamaño de la porción"],
-    ["calidad", "Calidad y frescura de los ingredientes"],
-    ["higiene", "Higiene y estado del tóper", "Que llegue limpio, bien cerrado y sin derrames."],
-    ["puntualidad", "Puntualidad de la entrega y temperatura al llegar"],
+    ["sabor", "¿Cómo calificas el sabor de la comida?"],
+    ["variedad", "¿Qué tal la variedad del menú?"],
+    ["porcion", "¿Cómo calificas el tamaño de la porción?"],
+    ["calidad", "¿Qué tal la calidad y frescura de los ingredientes?"],
+    ["higiene", "¿Cómo calificas la higiene y el estado del tóper?", "Que llegue limpio, bien cerrado y sin derrames."],
+    ["puntualidad", "¿Qué tal la puntualidad de la entrega y la temperatura al llegar?"],
     ["saludable", "¿Qué tan saludable y balanceada te parece la comida?"]
   ];
   var ETIQUETAS = ["", "Muy malo", "Malo", "Regular", "Bueno", "Excelente"];
   var MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  var TOTAL = 10;
 
   var hoy = new Date();
   var b = Math.floor(hoy.getMonth() / 2);
   var periodoId = hoy.getFullYear() + "-B" + (b + 1);
-  document.getElementById("periodo").textContent = MESES[b * 2] + "–" + MESES[b * 2 + 1] + " " + hoy.getFullYear();
+  var periodo = MESES[b * 2] + "–" + MESES[b * 2 + 1] + " " + hoy.getFullYear();
 
   function storage(fn) { try { return fn(window.localStorage); } catch (e) { return null; } }
-  if (storage(function (s) { return s.getItem("nps-comida-" + periodoId); })) {
-    document.getElementById("survey").hidden = true;
-    document.getElementById("done").hidden = false;
-    document.getElementById("doneMsg").textContent = "Ya contestaste la encuesta de este bimestre desde este dispositivo. ¡Gracias!";
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return "&#" + c.charCodeAt(0) + ";"; }); }
+
+  // Cada paso: bienvenida, 10 preguntas y gracias
+  var pasos = [{ tipo: "inicio" }, { tipo: "nps", q: "nps" }, { tipo: "dias", q: "dias" }]
+    .concat(ATRIBUTOS.map(function (a) { return { tipo: "estrellas", q: a[0], titulo: a[1], hint: a[2] }; }))
+    .concat([{ tipo: "comentario", q: "comentario" }, { tipo: "fin" }]);
+
+  var resp = {};
+  var actual = 0;
+  var stage = document.getElementById("stage");
+
+  function encabezado(n, titulo, hint) {
+    return '<div class="num">PREGUNTA ' + n + " DE " + TOTAL + '</div><h2 id="t' + n + '">' + esc(titulo) + "</h2>" + (hint ? '<p class="hint">' + esc(hint) + "</p>" : "");
   }
 
-  function opt(name, value, label, cls, aria) {
-    return '<label class="opt ' + (cls || "") + '"><input type="radio" name="' + name + '" value="' + value + '"' +
-      (aria ? ' aria-label="' + aria + '"' : "") + '><span>' + label + "</span></label>";
+  function html(p, i) {
+    if (p.tipo === "inicio") {
+      return '<h1>¿Qué tal estuvo la comida este bimestre?</h1><p class="lead">Tu opinión ayuda a que el proveedor mejore. Es anónima y toma menos de 2 minutos.</p>' +
+        '<div class="meta"><span class="pill">10 preguntas</span><span class="pill">Anónima</span><span class="pill">' + periodo + '</span></div>' +
+        '<button class="cta" data-accion="empezar" type="button">Empezar</button>';
+    }
+    if (p.tipo === "nps") {
+      var s = "";
+      for (var v = 0; v <= 10; v++) s += '<button type="button" class="opt ' + (v <= 6 ? "det" : v <= 8 ? "pas" : "pro") + '" data-v="' + v + '">' + v + "</button>";
+      return encabezado(i, "Del 0 al 10, ¿qué tan probable es que le recomiendes el servicio de comida a un compañero?") +
+        '<div class="opts"><div class="nps" role="group" aria-labelledby="t' + i + '">' + s + '</div><div class="ends"><span>0 = Nada probable</span><span>10 = Muy probable</span></div></div>';
+    }
+    if (p.tipo === "dias") {
+      var d = "";
+      for (var k = 1; k <= 5; k++) d += '<button type="button" class="opt" data-v="' + k + '">' + k + "<small>" + (k === 1 ? "día" : "días") + "</small></button>";
+      return encabezado(i, "¿Cuántos días a la semana comes del servicio?") + '<div class="opts"><div class="days" role="group" aria-labelledby="t' + i + '">' + d + "</div></div>";
+    }
+    if (p.tipo === "estrellas") {
+      var e = "";
+      for (var x = 1; x <= 5; x++) e += '<button type="button" class="opt" data-v="' + x + '" aria-label="' + x + " de 5, " + ETIQUETAS[x] + '"></button>';
+      return encabezado(i, p.titulo, p.hint) + '<div class="opts"><div class="stars" role="group" aria-labelledby="t' + i + '">' + e + '</div><div class="starlbl"></div></div>';
+    }
+    if (p.tipo === "comentario") {
+      return encabezado(i, "¿Qué es lo que más debería mejorar el proveedor?", "Opcional. No escribas nombres.") +
+        '<textarea id="comentario" maxlength="500" placeholder="Por ejemplo: más opciones de guisado, porciones de arroz más grandes…"></textarea>' +
+        '<div class="chars"><span id="chars">0</span>/500</div>' +
+        '<button class="cta" data-accion="enviar" type="button">Enviar respuestas</button><div class="err" id="err" role="alert"></div>';
+    }
+    return '<div class="done"><img src="logo.svg" alt=""><h1>¡Gracias!</h1><p id="doneMsg">Tus respuestas se enviaron. Te volveremos a preguntar el próximo bimestre.</p></div>';
   }
 
-  var html = "";
-  for (var i = 0; i <= 10; i++) html += opt("nps", i, i, i <= 6 ? "det" : i <= 8 ? "pas" : "pro");
-  document.getElementById("npsOpts").innerHTML = html;
+  stage.innerHTML = pasos.map(function (p, i) { return '<section class="step" data-i="' + i + '">' + html(p, i) + "</section>"; }).join("");
+  var secciones = stage.querySelectorAll(".step");
 
-  html = "";
-  for (i = 1; i <= 5; i++) html += opt("dias", i, i);
-  document.getElementById("diasOpts").innerHTML = html;
+  function marcar(sec, q) {
+    var v = resp[q];
+    sec.querySelectorAll(".opt").forEach(function (b) {
+      var bv = Number(b.getAttribute("data-v"));
+      b.classList.toggle("sel", bv === v);
+      b.classList.toggle("lit", v != null && bv <= v);
+      b.setAttribute("aria-pressed", bv === v);
+    });
+    var lbl = sec.querySelector(".starlbl");
+    if (lbl) lbl.textContent = v ? ETIQUETAS[v] : "";
+  }
 
-  html = "";
-  ATRIBUTOS.forEach(function (a, idx) {
-    var stars = "";
-    // Orden inverso + row-reverse para que el CSS ilumine las estrellas a la izquierda de la elegida
-    for (var v = 5; v >= 1; v--) stars += opt(a[0], v, v, "", v + " de 5, " + ETIQUETAS[v]);
-    html += '<fieldset data-q="' + a[0] + '"><legend><span class="n">' + (idx + 3) + ".</span>" + a[1] +
-      (a[2] ? '<span class="hint">' + a[2] + "</span>" : "") + '</legend><div class="stars">' + stars +
-      '</div><div class="starlbl" id="lbl-' + a[0] + '"></div></fieldset>';
+  function ir(i, atras) {
+    secciones[actual].classList.remove("on", "atras");
+    actual = i;
+    var sec = secciones[i];
+    sec.classList.toggle("atras", !!atras);
+    sec.classList.add("on");
+    var p = pasos[i];
+    var enPregunta = i > 0 && i <= TOTAL;
+    document.getElementById("prog").hidden = !enPregunta;
+    document.getElementById("back").disabled = !(i > 1 && i <= TOTAL);
+    document.getElementById("fill").style.width = ((i - 1) / TOTAL * 100) + "%";
+    if (p.q) marcar(sec, p.q);
+    var foco = sec.querySelector(".opt.sel, .opt, textarea, .cta");
+    if (foco && i > 0) foco.focus({ preventScroll: true });
+    window.scrollTo(0, 0);
+  }
+
+  var avanzando = null;
+  stage.addEventListener("click", function (e) {
+    var accion = e.target.closest("[data-accion]");
+    if (accion) {
+      if (accion.getAttribute("data-accion") === "empezar") ir(1);
+      else enviar(accion);
+      return;
+    }
+    var b = e.target.closest(".opt");
+    if (!b) return;
+    var p = pasos[actual];
+    resp[p.q] = Number(b.getAttribute("data-v"));
+    marcar(secciones[actual], p.q);
+    // Pausa breve para que se vea la selección antes de avanzar
+    clearTimeout(avanzando);
+    avanzando = setTimeout(function () { ir(actual + 1); }, 380);
   });
-  document.getElementById("stars").innerHTML = html;
 
-  var form = document.getElementById("form");
-  var requeridas = ["nps", "dias"].concat(ATRIBUTOS.map(function (a) { return a[0]; }));
+  // Vista previa de estrellas al pasar el mouse
+  stage.addEventListener("pointerover", function (e) {
+    var b = e.target.closest(".stars .opt");
+    if (!b) return;
+    var v = Number(b.getAttribute("data-v"));
+    b.parentNode.querySelectorAll(".opt").forEach(function (s) { s.classList.toggle("lit", Number(s.getAttribute("data-v")) <= v); });
+  });
+  stage.addEventListener("pointerout", function (e) {
+    if (e.target.closest(".stars")) marcar(secciones[actual], pasos[actual].q);
+  });
 
-  function valor(name) {
-    var el = form.querySelector('input[name="' + name + '"]:checked');
-    return el ? Number(el.value) : null;
-  }
-  function progreso() {
-    var n = requeridas.filter(function (q) { return valor(q) !== null; }).length;
-    document.getElementById("fill").style.width = (n / requeridas.length * 100) + "%";
-    document.getElementById("count").textContent = n + " de " + requeridas.length + " respondidas";
-  }
-  form.addEventListener("change", function (e) {
-    var q = e.target.name;
-    var lbl = document.getElementById("lbl-" + q);
-    if (lbl) lbl.textContent = ETIQUETAS[valor(q)];
-    var fs = form.querySelector('fieldset[data-q="' + q + '"]');
-    if (fs) fs.classList.remove("missing");
-    progreso();
+  document.getElementById("back").addEventListener("click", function () {
+    clearTimeout(avanzando);
+    if (actual > 1) ir(actual - 1, true);
   });
 
   var com = document.getElementById("comentario");
   com.addEventListener("input", function () { document.getElementById("chars").textContent = com.value.length; });
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+  function enviar(btn) {
     var err = document.getElementById("err");
-    var faltan = requeridas.filter(function (q) { return valor(q) === null; });
-    if (faltan.length) {
-      faltan.forEach(function (q) { form.querySelector('fieldset[data-q="' + q + '"]').classList.add("missing"); });
-      form.querySelector('fieldset[data-q="' + faltan[0] + '"]').scrollIntoView({ behavior: "smooth", block: "center" });
-      err.textContent = faltan.length === 1 ? "Falta 1 pregunta por contestar." : "Faltan " + faltan.length + " preguntas por contestar.";
-      return;
-    }
+    var faltan = pasos.filter(function (p) { return p.q && p.q !== "comentario" && resp[p.q] == null; });
+    if (faltan.length) { ir(pasos.indexOf(faltan[0]), true); return; }
     var url = window.NPS_CONFIG && window.NPS_CONFIG.SCRIPT_URL;
     if (!url) { err.textContent = "La encuesta aún no está conectada a Google Sheets (falta SCRIPT_URL)."; return; }
 
     var datos = { comentario: com.value.trim().slice(0, 500) };
-    requeridas.forEach(function (q) { datos[q] = valor(q); });
+    pasos.forEach(function (p) { if (p.q && p.q !== "comentario") datos[p.q] = resp[p.q]; });
 
-    var btn = document.getElementById("send");
     btn.disabled = true; btn.textContent = "Enviando…"; err.textContent = "";
     // text/plain evita la verificación CORS previa; Apps Script lee el cuerpo igual
     fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(datos) })
       .then(function () {
         storage(function (s) { s.setItem("nps-comida-" + periodoId, "1"); });
-        document.getElementById("survey").hidden = true;
-        document.getElementById("done").hidden = false;
-        window.scrollTo(0, 0);
+        document.getElementById("fill").style.width = "100%";
+        ir(pasos.length - 1);
       })
       .catch(function () {
         btn.disabled = false; btn.textContent = "Enviar respuestas";
         err.textContent = "No se pudo enviar. Revisa tu conexión e inténtalo de nuevo.";
       });
-  });
+  }
+
+  if (storage(function (s) { return s.getItem("nps-comida-" + periodoId); })) {
+    ir(pasos.length - 1);
+    document.getElementById("doneMsg").textContent = "Ya contestaste la encuesta de este bimestre desde este dispositivo. ¡Gracias!";
+  } else {
+    ir(0);
+  }
 })();
 </script>
 </body>
